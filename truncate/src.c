@@ -43,9 +43,15 @@ int oneHoleFile() {
 	}
 	int offset = 0;
 	char tempBuf[]="somnath";
+	
+	while ( !exists && write( fd, tempBuf, CHUNK_SIZE ) && (offset+=CHUNK_SIZE) < ( FILE_MAX_SIZE - 2*CHUNK_SIZE ) ); 
+	
 	offset += CHUNK_SIZE;
 	lseek(fd, offset, SEEK_SET);
-	while ( !exists && write( fd, tempBuf, CHUNK_SIZE ) && (offset+=CHUNK_SIZE) < FILE_MAX_SIZE ); 
+	
+	write( fd, tempBuf, CHUNK_SIZE );
+	
+
 	return fd;
 }
 
@@ -65,8 +71,23 @@ int gtThanOneHoleFile() {
 	offset += CHUNK_SIZE;
 	lseek(fd, offset, SEEK_SET);
 	
+	offset += CHUNK_SIZE;
+	lseek( fd, offset, SEEK_SET  );
+	
 	write( fd, tempBuf, CHUNK_SIZE );
 	offset += CHUNK_SIZE;
+	
+	write( fd, tempBuf, CHUNK_SIZE );
+	offset += CHUNK_SIZE;
+	
+	offset += CHUNK_SIZE;
+	lseek(fd, offset, SEEK_SET);
+	
+	offset += CHUNK_SIZE;
+	lseek(fd, offset, SEEK_SET);
+	
+	offset += CHUNK_SIZE;
+	lseek(fd, offset, SEEK_SET);
 	
 	offset += CHUNK_SIZE;
 	lseek(fd, offset, SEEK_SET);
@@ -101,8 +122,8 @@ int findHole(int fd) {
 	int holeCount = 0;
 	lseek(fd, 0, SEEK_SET);
 	while( read( fd, tempbuf, CHUNK_SIZE ) == CHUNK_SIZE ) {
-		DPRINTF("%s ", tempbuf);
-		DPRINTF("%d ", ( ( tempbuf[0] & 0xFF ) && ( tempbuf[1] & 0xFF ) && ( tempbuf[2] & 0xFF ) && ( tempbuf[3] & 0xFF ) ) );
+		//DPRINTF("%s ", tempbuf);
+		//DPRINTF("%d ", ( ( tempbuf[0] & 0xFF ) && ( tempbuf[1] & 0xFF ) && ( tempbuf[2] & 0xFF ) && ( tempbuf[3] & 0xFF ) ) );
 		if(! ( ( tempbuf[0] & 0xFF ) && ( tempbuf[1] & 0xFF ) && ( tempbuf[2] & 0xFF ) && ( tempbuf[3] & 0xFF ) )){
 			holeCount++;
 		}
